@@ -289,6 +289,7 @@ namespace BeatSage_Downloader
         private string identifier;
         private string environment;
         private string modelVersion;
+        private string titleSuffix;
         private bool isAlive;
 
         public int Number
@@ -463,6 +464,19 @@ namespace BeatSage_Downloader
             set
             {
                 modelVersion = value;
+                RaiseProperChanged();
+            }
+        }
+
+        public string TitleSuffix
+        {
+            get
+            {
+                return titleSuffix;
+            }
+            set
+            {
+                titleSuffix = value;
                 RaiseProperChanged();
             }
         }
@@ -690,7 +704,10 @@ namespace BeatSage_Downloader
                 trackName = String.Join("_", video.Title.Split(invalids, StringSplitOptions.RemoveEmptyEntries)).TrimEnd('.');
             }
 
-            trackName += " - " + download.ModelVersion;
+            if (download.TitleSuffix != null)
+            {
+                trackName += " - " + download.TitleSuffix;
+            }
 
             download.Artist = artistName;
             download.Title = trackName;
@@ -781,7 +798,7 @@ namespace BeatSage_Downloader
             content.Add(new StringContent(download.GameModes), "modes");
             content.Add(new StringContent(download.SongEvents), "events");
             content.Add(new StringContent(download.Environment), "environment");
-            content.Add(new StringContent(download.ModelVersion.ToLower()), "system_tag");
+            content.Add(new StringContent(download.ModelVersion), "system_tag");
 
             var response = await httpClient.PostAsync("https://beatsage.com/beatsaber_custom_level_create", content, cts.Token);
 
@@ -885,7 +902,11 @@ namespace BeatSage_Downloader
             var invalids = System.IO.Path.GetInvalidFileNameChars();
 
             trackName = String.Join("_", trackName.Split(invalids, StringSplitOptions.RemoveEmptyEntries)).TrimEnd('.');
-            trackName += " - " + download.ModelVersion;
+            if (download.TitleSuffix != null)
+            {
+                trackName += " - " + download.TitleSuffix;
+            }
+
             artistName = String.Join("_", artistName.Split(invalids, StringSplitOptions.RemoveEmptyEntries)).TrimEnd('.');
 
             Console.WriteLine("trackName: " + trackName);
@@ -926,7 +947,7 @@ namespace BeatSage_Downloader
             content.Add(new StringContent(download.GameModes), "modes");
             content.Add(new StringContent(download.SongEvents), "events");
             content.Add(new StringContent(download.Environment), "environment");
-            content.Add(new StringContent(download.ModelVersion.ToLower()), "system_tag");
+            content.Add(new StringContent(download.ModelVersion), "system_tag");
 
             var response = await httpClient.PostAsync("https://beatsage.com/beatsaber_custom_level_create", content, cts.Token);
 
@@ -1015,7 +1036,7 @@ namespace BeatSage_Downloader
             content.Add(new StringContent(download.GameModes), "modes");
             content.Add(new StringContent(download.SongEvents), "events");
             content.Add(new StringContent(download.Environment), "environment");
-            content.Add(new StringContent(download.ModelVersion.ToLower()), "system_tag");
+            content.Add(new StringContent(download.ModelVersion), "system_tag");
 
             var response = await httpClient.PostAsync("https://beatsage.com/beatsaber_custom_level_create", content, cts.Token);
 
